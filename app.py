@@ -1,12 +1,8 @@
 from flask import Flask
 from os import environ
-from init import db, ma , bcrypt, jwt
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager
 from init import db, ma, bcrypt, jwt
 from blueprints.cli_bp import cli_bp
+from blueprints.auth_bp import auth_bp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,6 +17,7 @@ jwt.init_app(app)
 bcrypt.init_app(app)
 
 app.register_blueprint(cli_bp)
+app.register_blueprint(auth_bp)
 
 @app.route('/')
 def index():

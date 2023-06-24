@@ -19,20 +19,20 @@ def seed_db():
             name='Eric Morales',
             email='morales@spam.com',
             address='101 Hull Rd, Sydney',
-            #password=bcrypt.generate_password_hash('sydney').decode('utf-8'),
+            password='abc',
             
         ),
         User(
             name='John Smith',
             email='smith@spam.com',
             address='16, Sheppards Road, Brisbane',
-            #password=bcrypt.generate_password_hash('melbourne').decode('utf-8'),
+            password='bca',
         ),
         User(
             name='Sam Jones',
             email='jones@spam.com',
             address='8 Fortune Avenue, Yarra Ranges',
-            #password=bcrypt.generate_password_hash('brisbane').decode('utf-8'),
+            password='cab',
         )
     ]
     db.session.query(User).delete()
