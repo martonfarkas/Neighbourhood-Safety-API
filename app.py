@@ -19,9 +19,7 @@ bcrypt.init_app(app)
 app.register_blueprint(cli_bp)
 app.register_blueprint(auth_bp)
 
-@app.route('/')
-def index():
-    return 'Hello World!'
+
 
 if __name__ == '__main__':
     app.run(debug=True)

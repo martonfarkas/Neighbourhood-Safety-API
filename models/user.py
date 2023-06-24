@@ -11,6 +11,8 @@ class User(db.Model):
     address = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
+    incidents = db.relationship('Incident', back_populates='user', cascade='all, delete')
+    alerts = db.relationship('Alert', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
     class Meta:

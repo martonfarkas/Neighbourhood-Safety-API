@@ -1,5 +1,6 @@
 from flask import Blueprint
 from models.user import User
+from models.incident import Incident
 from init import db, bcrypt
 from datetime import datetime
 
@@ -37,4 +38,25 @@ def seed_db():
     ]
     db.session.query(User).delete()
     db.session.add_all(users)
+    db.session.commit()
+
+    incidents = [
+        Incident(
+            description='Robbery',
+            date_time=datetime.now(),
+            user=users[0],
+        ),
+         Incident(
+            description='Burglary',
+            date_time=datetime.now(),
+            user=users[1],
+        ),
+         Incident(
+            description='Vandalism',
+            date_time=datetime.now(),
+            user=users[1],
+        )
+    ]
+    db.session.query(Incident).delete()
+    db.session.add_all(incidents)
     db.session.commit()
