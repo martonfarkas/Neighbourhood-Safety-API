@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from init import db, ma, bcrypt, jwt
+from blueprints.cli_bp import cli_bp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,6 +19,8 @@ db.init_app(app)
 ma.init_app(app)
 jwt.init_app(app)
 bcrypt.init_app(app)
+
+app.register_blueprint(cli_bp)
 
 @app.route('/')
 def index():
