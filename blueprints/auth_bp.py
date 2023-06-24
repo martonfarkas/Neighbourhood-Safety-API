@@ -5,9 +5,9 @@ from datetime import timedelta
 from flask_jwt_extended import create_access_token
 from init import db, bcrypt
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@auth_bp.route('/users')
+@auth_bp.route('/users/')
 def all_users():
     stmt = db.select(User)
     users = db.session.scalars(stmt)
@@ -19,7 +19,7 @@ def one_user(id):
     user = db.session.scalar(stmt)
     return UserSchema().dump(user)
 
-@auth_bp.route('/register', methods=['POST'])
+@auth_bp.route('/register/', methods=['POST'])
 def register():
     try:
         user = User(
@@ -36,7 +36,7 @@ def register():
     except IntegrityError:
         return {'error': 'This email address already exists!'}
     
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/login/', methods=['POST'])
 def login():
     try:
         stmt = stmt = db.select(User).filter_by(email=request.json['email'])
