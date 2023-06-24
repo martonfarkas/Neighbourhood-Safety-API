@@ -2,6 +2,7 @@ from flask import Blueprint
 from models.user import User
 from models.incident import Incident
 from models.location import Location
+from models.alert import Alert
 from init import db, bcrypt
 from datetime import datetime
 
@@ -78,6 +79,21 @@ def seed_db():
     ]
     db.session.query(Location).delete()
     db.session.add_all(locations)
+    db.session.commit()
+
+    alerts = [
+        Alert(
+            alert_message='Alert message 1 - Robbery'
+        ),
+        Alert(
+            alert_message='Alert message 2 - Burglary'
+        ),
+        Alert(
+            alert_message='Alert message 3 - Vandalism'
+        )
+    ]
+    db.session.query(Alert).delete()
+    db.session.add_all(alerts)
     db.session.commit()
 
     print('Models Seeded Successfully')
