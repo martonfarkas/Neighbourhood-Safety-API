@@ -1,6 +1,7 @@
 from flask import Blueprint
 from models.user import User
 from models.incident import Incident
+from models.location import Location
 from init import db, bcrypt
 from datetime import datetime
 
@@ -44,19 +45,39 @@ def seed_db():
         Incident(
             description='Robbery',
             date_time=datetime.now(),
-            user=users[0],
+            #user=users[0],
         ),
          Incident(
             description='Burglary',
             date_time=datetime.now(),
-            user=users[1],
+            #user=users[1],
         ),
          Incident(
             description='Vandalism',
             date_time=datetime.now(),
-            user=users[1],
+            #user=users[1],
         )
     ]
     db.session.query(Incident).delete()
     db.session.add_all(incidents)
     db.session.commit()
+
+    locations = [
+        Location(
+            city='Sydney',
+            address='25 Avoca St, Randwick'
+        ),
+        Location(
+            city='Brisbane',
+            address='242 Edward St, Brisbane City'
+        ),
+        Location(
+            city='Melbourne',
+            address='19 Nelson St, Maroondah'
+        )
+    ]
+    db.session.query(Location).delete()
+    db.session.add_all(locations)
+    db.session.commit()
+
+    print('Models Seeded Successfully')

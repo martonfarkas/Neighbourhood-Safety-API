@@ -8,7 +8,7 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     address = db.Column(db.String(100))
 
-    incident = db.relationship('Incident', uselist=False, back_populates='location')
+    # incident = db.relationship('Incident', uselist=False, back_populates='location')
 
 class LocationSchema(ma.Schema):
     class Meta:

@@ -10,11 +10,11 @@ class Incident(db.Model):
     description = db.Column(db.Text())
     date_time = db.Column(db.DateTime, default=datetime.now)
 
-    alert_id = db.Column(db.Integer, db.ForeignKey('alerts.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    # alert_id = db.Column(db.Integer, db.ForeignKey('alerts.id'))
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    location = db.relationship('Location', uselist=False, back_populates='incidents', cascade='all, delete')
+    # location = db.relationship('Location', uselist=False, back_populates='incidents', cascade='all, delete')
 
 class IncidentSchema(ma.Schema):
     class Meta:
