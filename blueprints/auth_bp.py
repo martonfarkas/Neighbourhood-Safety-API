@@ -11,22 +11,23 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 def all_users():
     stmt = db.select(User)
     users = db.session.scalars(stmt)
-    return UserSchema(many=True).dump(users)
+    return UserSchema(many=True, exclude=['password']).dump(users)
 
 @auth_bp.route('/users/<int:id>/')
 def one_user(id):
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
-    return UserSchema().dump(user)
+    return UserSchema(exclude=['password']).dump(user)
 
 @auth_bp.route('/register/', methods=['POST'])
-def register():
+def auth_register():
     try:
         user = User(
             name=request.json.get('name'),
             email=request.json['email'],
             address=request.json.get('address'),
-            #password=bcrypt.generate_password_hash(request.json['password']).decode('utf-8')
+            password=bcrypt.generate_password_hash(request.json['password']).decode('utf-8'),
+            password=request.json.get('password')
         )
 
         db.session.add(user)
@@ -34,16 +35,16 @@ def register():
 
         return UserSchema(exclude=['password']).dump(user), 201
     except IntegrityError:
-        return {'error': 'This email address already exists!'}
+        return {'error': 'This email address already exists!'}, 409
     
 @auth_bp.route('/login/', methods=['POST'])
-def login():
+def auth_login():
     try:
-        stmt = stmt = db.select(User).filter_by(email=request.json['email'])
+        stmt = db.select(User).filter_by(email=request.json['email'])
         user = db.session.scalar(stmt)
         if user and bcrypt.check_password_hash(user.password, request.json['password']):
-            token = create_access_token(identity=user.id, expires_delta=timedelta(days=1))
-            return {'token': token, 'email': user.email}
+            token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+            return {'token': token, 'user': UserSchema(exclude=['password']).dump(user)}
         else:
             return {'error': 'Invalid email address or password!'}, 401
     except KeyError:

@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from models.incident import Incident, IncidentSchema
 from datetime import datetime
 from init import db
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 incident_bp = Blueprint('incidents', __name__, url_prefix='/incidents')
 
@@ -21,6 +22,7 @@ def one_incident(incident_id):
         return {'error': 'Incident not found'}, 404
     
 @incident_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_incident():
     incident_info = IncidentSchema().load(request.json)
     incident = Incident(
@@ -36,6 +38,7 @@ def create_incident():
     return IncidentSchema().dump(incident), 201
 
 @incident_bp.route('/<int:incident_id>', methods=['PUT', 'PATCH'])
+@jwt_required()
 def update_incident(incident_id):
     stmt = db.select(Incident).filter_by(id=incident_id)
     incident = db.session.scalar(stmt)
@@ -46,3 +49,15 @@ def update_incident(incident_id):
         return IncidentSchema().dump(incident)
     else:
         return{'error': 'Incident not found'}, 404
+    
+@incident_bp.route('/<int:incident_id>', methods=['DELETE'])
+@jwt_required()
+def delete_incident(incident_id):
+    stmt = db.select(Incident).filter_by(id=incident_id)
+    incident = db.session.scalar(stmt)
+    if incident:
+        db.session.delete(incident)
+        db.session.commit()
+        return {'message': f'Incident {incident_id} was succesfully deleted'}
+    else:
+        return {'error': 'Incident not found'}, 404
