@@ -35,3 +35,14 @@ def create_incident():
     db.session.commit()
     return IncidentSchema().dump(incident), 201
 
+@incident_bp.route('/<int:incident_id>', methods=['PUT', 'PATCH'])
+def update_incident(incident_id):
+    stmt = db.select(Incident).filter_by(id=incident_id)
+    incident = db.session.scalar(stmt)
+    incident_info = IncidentSchema().load(request.json)
+    if incident:
+        incident.description=incident_info['description']
+        db.session.commit()
+        return IncidentSchema().dump(incident)
+    else:
+        return{'error': 'Incident not found'}, 404
