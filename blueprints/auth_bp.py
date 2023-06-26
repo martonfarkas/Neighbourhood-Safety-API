@@ -27,7 +27,6 @@ def auth_register():
             email=request.json['email'],
             address=request.json.get('address'),
             password=bcrypt.generate_password_hash(request.json['password']).decode('utf-8'),
-            password=request.json.get('password')
         )
 
         db.session.add(user)

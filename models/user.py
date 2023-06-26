@@ -1,7 +1,6 @@
 from init import db, ma
 from marshmallow import fields
 
-
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -12,10 +11,10 @@ class User(db.Model):
     address = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
-    # incidents = db.relationship('Incident', back_populates='user', cascade='all, delete')
-    # alerts = db.relationship('Alert', back_populates='user', cascade='all, delete')
+    incidents = db.relationship('Incident', back_populates='user', cascade='all, delete')
+    alerts = db.relationship('Alert', secondary='incidents', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'email', 'address', 'password')
+        fields = ('id', 'name', 'email', 'address', 'password', 'incidents', 'alerts')
         ordered=True

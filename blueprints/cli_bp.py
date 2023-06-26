@@ -34,7 +34,7 @@ def seed_db():
         User(
             name='Sam Jones',
             email='jones@spam.com',
-            address='8 Fortune Avenue, Yarra Ranges',
+            address='8 Fortune Avenue, Melbourne',
             password=bcrypt.generate_password_hash('safety').decode('utf-8'),
         )
     ]
@@ -42,39 +42,24 @@ def seed_db():
     db.session.add_all(users)
     db.session.commit()
 
-    incidents = [
-        Incident(
-            description='Robbery',
-            date_time=datetime.now(),
-            #user=users[0],
-        ),
-         Incident(
-            description='Burglary',
-            date_time=datetime.now(),
-            #user=users[1],
-        ),
-         Incident(
-            description='Vandalism',
-            date_time=datetime.now(),
-            #user=users[1],
-        )
-    ]
-    db.session.query(Incident).delete()
-    db.session.add_all(incidents)
-    db.session.commit()
-
     locations = [
         Location(
             city='Sydney',
-            address='25 Avoca St, Randwick'
+            address='25 Avoca St, Randwick',
+            user=users[0],
+            incident_id=1
         ),
         Location(
             city='Brisbane',
-            address='242 Edward St, Brisbane City'
+            address='242 Edward St, Brisbane City',
+            user=users[1],
+            incident_id=2
         ),
         Location(
             city='Melbourne',
-            address='19 Nelson St, Maroondah'
+            address='19 Nelson St, Maroondah',
+            users=users[2],
+            incident_id=3
         )
     ]
     db.session.query(Location).delete()
@@ -83,17 +68,38 @@ def seed_db():
 
     alerts = [
         Alert(
-            alert_message='Alert message 1 - Robbery'
+            alert_message='Alert message 1 - Robbery',
         ),
         Alert(
-            alert_message='Alert message 2 - Burglary'
+            alert_message='Alert message 2 - Burglary',
         ),
         Alert(
-            alert_message='Alert message 3 - Vandalism'
+            alert_message='Alert message 3 - Vandalism',
         )
     ]
     db.session.query(Alert).delete()
     db.session.add_all(alerts)
+    db.session.commit()
+
+    incidents = [
+        Incident(
+            description='Robbery',
+            date_time=datetime.now(),
+            user=users[0],
+        ),
+         Incident(
+            description='Burglary',
+            date_time=datetime.now(),
+            user=users[1],
+        ),
+         Incident(
+            description='Vandalism',
+            date_time=datetime.now(),
+            user=users[2],
+        )
+    ]
+    db.session.query(Incident).delete()
+    db.session.add_all(incidents)
     db.session.commit()
 
     print('Models Seeded Successfully')

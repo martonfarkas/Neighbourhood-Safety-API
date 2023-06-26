@@ -7,11 +7,10 @@ class Alert(db.Model):
 
     alert_message = db.Column(db.String())
 
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # incidents = db.relationship('Incident', secondary='alert_incident', back_populates='alerts')
+    
 
 class AlertSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'alert_message')
+        fields = ('id', 'alert_message', 'user_id', 'incident_id')
         ordered=True
         
