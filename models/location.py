@@ -8,9 +8,10 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     address = db.Column(db.String(100))
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    user = db.relationship('Location', back_populates='location', cascade='all, delete')
+    user = db.relationship('User', back_populates='location', uselist=False)
+    incidents = db.relationship('Incident', back_populates='location', cascade='all, delete')
 
 class LocationSchema(ma.Schema):
     class Meta:

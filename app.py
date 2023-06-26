@@ -7,16 +7,14 @@ from blueprints.alert_bp import alert_bp
 from blueprints.incident_bp import incident_bp
 from blueprints.location_bp import location_bp
 from marshmallow.exceptions import ValidationError
-# from dotenv import load_dotenv
 
-# load_dotenv()
 
 def create_app():
     app = Flask(__name__)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URI')
-    app.config['JWT_SECRET_KEY'] = environ.get('JWT_KEY') 
-
+    app.config['JWT_SECRET_KEY'] = environ.get('JWT_KEY')
+    
     db.init_app(app)
     ma.init_app(app)
     jwt.init_app(app)
@@ -42,7 +40,7 @@ def create_app():
     def key_error(err):
         return {'error': f'The field {err} is missing'}, 400
 
-    app.register_blueprint(cli_bp, name='cli_bp')
+    app.register_blueprint(cli_bp)
     app.register_blueprint(auth_bp, name='auth_bp')
     app.register_blueprint(alert_bp, name='alert_bp')
     app.register_blueprint(incident_bp, name='incident_bp')

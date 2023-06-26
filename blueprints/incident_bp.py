@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from models.incident import Incident, IncidentSchema
 from datetime import datetime
 from init import db
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 incident_bp = Blueprint('incidents', __name__, url_prefix='/incidents')
 
@@ -30,7 +30,7 @@ def create_incident():
         date_time=datetime.now(),
         location_id=incident_info['location_id'],
         alert_id=incident_info['alert_id'],
-        user_id=incident_info['user_id']
+        user_id=get_jwt_identity()
     )
 
     db.session.add(incident)
