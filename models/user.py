@@ -11,12 +11,16 @@ class User(db.Model):
     address = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
-    incidents = db.relationship('Incident', back_populates='user', cascade='all, delete')
-    alerts = db.relationship('Alert', back_populates='user', cascade='all, delete')
-    location = db.relationship('Location', back_populates='user', uselist=False, cascade='all, delete')
+    incidents = db.relationship('Incident', back_populates='user')
+    
+    alerts = db.relationship('Alert', back_populates='user')
+   
+    location = db.relationship('Location', back_populates='user', uselist=False)
 
 class UserSchema(ma.Schema):
-    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['user', 'id']))
+    incidents = fields.Nested('IncidentSchema', exclude=['user'], many=True)
+    location = fields.Nested('LocationSchema', exclude=['user'])
+
     class Meta:
-        fields = ('name', 'email', 'address', 'password', 'incidents')
+        fields = ('id', 'name', 'email', 'address', 'password', 'incidents', 'alerts')
         ordered=True

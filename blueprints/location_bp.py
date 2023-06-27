@@ -4,7 +4,7 @@ from init import db
 
 location_bp = Blueprint('locations', __name__, url_prefix='/locations')
 
-@location_bp.route('', methods=['GET'])
+@location_bp.route('/', methods=['GET'])
 def get_locations():
     stmt = db.select(Location).order_by(Location.city.desc())
     locations = db.session.scalars(stmt).all()

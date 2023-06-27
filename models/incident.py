@@ -9,10 +9,9 @@ class Incident(db.Model):
 
     description = db.Column(db.Text())
     date_time = db.Column(db.DateTime, default=datetime.now)
-
     
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
-    location = db.relationship('Location', back_populates='incidents', cascade='all, delete')
+    location = db.relationship('Location', back_populates='incidents')
     
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', back_populates='incidents')
@@ -22,6 +21,9 @@ class Incident(db.Model):
 
 class IncidentSchema(ma.Schema):
     user = fields.Nested('UserSchema', exclude=['password', 'incidents'])
+    location = fields.Nested('LocationSchema', exclude=['incidents'])
+    alerts = fields.Nested('AlertSchema', exclude=['incidents'])
+
     class Meta:
-        fields = ('id', 'description', 'date_time', 'user')
+        fields = ('id', 'description', 'date_time', 'user', 'location', 'alert')
         ordered=True
