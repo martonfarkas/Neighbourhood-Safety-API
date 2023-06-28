@@ -20,9 +20,9 @@ class Incident(db.Model):
     alert = db.relationship('Alert', back_populates='incidents')
 
 class IncidentSchema(ma.Schema):
-    user = fields.Nested('UserSchema', exclude=['password', 'incidents'])
+    user = fields.Nested('UserSchema', exclude=['password', 'incidents', 'location'])
     location = fields.Nested('LocationSchema', exclude=['incidents'])
-    alerts = fields.Nested('AlertSchema', exclude=['incidents'])
+    alert = fields.Nested('AlertSchema', exclude=['incidents'])
 
     class Meta:
         fields = ('id', 'description', 'date_time', 'user', 'location', 'alert')

@@ -30,8 +30,6 @@ def seed_db():
             Location(
                 city='Melbourne',
                 address='19 Nelson St, Maroondah',
-                # users=users[2],
-                # incident_id=3
             )
         ]
         for location in locations:

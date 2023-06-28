@@ -9,13 +9,14 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     address = db.Column(db.String(100))
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
 
     user = db.relationship('User', back_populates='location')
     incidents = db.relationship('Incident', back_populates='location')
 
 class LocationSchema(ma.Schema):
-    incidents = fields.Nested('IncidentSchema', exclude=['location'], many=True)
+    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['location']))
+    user = fields.Nested('UserSchema', exclude=['location', 'incidents'])
     class Meta:
-        fields = ('id', 'city', 'address', 'incidents')
+        fields = ('id', 'city', 'address', 'incidents', 'user')
         ordered=True

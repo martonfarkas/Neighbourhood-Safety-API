@@ -18,9 +18,11 @@ class User(db.Model):
     location = db.relationship('Location', back_populates='user', uselist=False)
 
 class UserSchema(ma.Schema):
-    incidents = fields.Nested('IncidentSchema', exclude=['user'], many=True)
+    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['user']))
     location = fields.Nested('LocationSchema', exclude=['user'])
+    alerts = fields.List(fields.Nested('AlertSchema', exclude=['user', 'incidents']))
+
 
     class Meta:
-        fields = ('id', 'name', 'email', 'address', 'password', 'incidents', 'alerts')
+        fields = ('id', 'name', 'email', 'address', 'password', 'incidents', 'alerts', 'location')
         ordered=True

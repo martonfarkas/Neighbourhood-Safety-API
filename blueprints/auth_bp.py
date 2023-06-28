@@ -10,7 +10,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @auth_bp.route('/users/')
 def all_users():
     stmt = db.select(User)
-    users = db.session.scalars(stmt)
+    users = db.session.scalars(stmt).all()
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 @auth_bp.route('/users/<int:id>/')

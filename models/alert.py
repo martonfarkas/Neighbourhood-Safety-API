@@ -17,8 +17,8 @@ class Alert(db.Model):
     
 
 class AlertSchema(ma.Schema):
-    user = fields.Nested(UserSchema, exclude=['alerts'])
-    incidents = fields.Nested(IncidentSchema, exclude=['alert'], many=True)
+    user = fields.Nested(UserSchema, exclude=['alerts', 'incidents', 'location'])
+    incidents = fields.List(fields.Nested(IncidentSchema, exclude=['alert', 'user']))
 
     class Meta:
         fields = ('id', 'alert_message', 'user', 'incidents')
