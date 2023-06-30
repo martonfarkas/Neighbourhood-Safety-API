@@ -11,13 +11,16 @@ class Alert(db.Model):
     alert_message = db.Column(db.String())
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # Defines a many-to-one relationship between the Alert and User models.
     user = db.relationship('User', back_populates='alerts')
-    
+    # Defines a one-to-many relationship between the Alert and Incident models.
     incidents = db.relationship('Incident', back_populates='alert', cascade='all, delete')
     
 
 class AlertSchema(ma.Schema):
+    # Declares a nested field for user, representing the user associated with the alert. It uses the UserSchema for serialization.
     user = fields.Nested(UserSchema, exclude=['alerts', 'incidents', 'location'])
+    #  Declares a nested field for incidents, representing the incidents associated with the alert. It uses the IncidentSchema for serialization.
     incidents = fields.List(fields.Nested(IncidentSchema, exclude=['alert', 'user']))
 
     class Meta:

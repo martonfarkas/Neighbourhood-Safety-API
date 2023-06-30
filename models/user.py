@@ -11,15 +11,19 @@ class User(db.Model):
     address = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
+    # Defines a one-to-many relationship between User and Incident models, where a user can have multiple incidents.
     incidents = db.relationship('Incident', back_populates='user')
-    
+    # Defines a one-to-many relationship between User and Alert models, where a user can have multiple alerts.
     alerts = db.relationship('Alert', back_populates='user')
-   
+    # Defines a one-to-one relationship between User and Location models, where a user can have only one location.
     location = db.relationship('Location', back_populates='user', uselist=False)
 
 class UserSchema(ma.Schema):
+    # Declares a nested field for incidents, representing a list of incidents associated with the user. It uses the IncidentSchema for serialization.
     incidents = fields.List(fields.Nested('IncidentSchema', exclude=['user']))
+    # Declares a nested field for location, representing the user's location. It uses the LocationSchema for serialization.
     location = fields.Nested('LocationSchema', exclude=['user'])
+    # Declares a nested field for alerts, representing a list of alerts associated with the user. It uses the AlertSchema for serialization.
     alerts = fields.List(fields.Nested('AlertSchema', exclude=['user', 'incidents']))
 
 

@@ -6,11 +6,12 @@ from models.alert import Alert
 from init import db, bcrypt
 from datetime import datetime
 
-
+# Creates a Flask Blueprint named cli_bp
 cli_bp = Blueprint('db', __name__)
 
 @cli_bp.cli.command('create')
 def create_db():
+    # drops existing database tables (if any) and creates new tables based on the defined models
     db.drop_all()
     db.create_all()
     print('Tables Created Successfully')
@@ -18,6 +19,7 @@ def create_db():
 @cli_bp.cli.command('seed')
 def seed_db():
     try:
+        # Define and seed locations
         locations = [
             Location(
                 city='Sydney',
@@ -32,15 +34,16 @@ def seed_db():
                 address='19 Nelson St, Maroondah',
             )
         ]
+        # Iterate over the locations and add them to the session
         for location in locations:
             if location.city and location.address:
                 db.session.add_all([location])
             else:
                 print(f"Invalid data for location: {location}")
-        #db.session.query(Location).delete()
-        #db.session.add_all(locations)
+        # Commit the changes to the database
         db.session.commit()
 
+        # Define and seed users
         users = [
             User(
                 name='Eric Morales',
@@ -64,15 +67,16 @@ def seed_db():
                 location=locations[2]
             )
         ]
+        # Iterate over the users and add them to the session
         for user in users:
             if user.name and user.email and user.address and user.password:
                 db.session.add_all([user])
             else:
                 print(f"Invalid data for user: {user}")
-        #db.session.query(User).delete()
-        #db.session.add_all(users)
+        # Commit the changes to the database
         db.session.commit()
 
+        # Define and seed incidents
         incidents = [
             Incident(
                 description='Robbery',
@@ -93,15 +97,16 @@ def seed_db():
                 location=locations[2]
             )
         ]
+        # Iterate over the incidents and add them to the session
         for incident in incidents:
             if incident.description and incident.date_time and incident.user and incident.location:
                 db.session.add_all([incident])
             else:
                 print(f"Invalid data for incident: {incident}")
-        #db.session.query(Incident).delete()
-        #db.session.add_all(incidents)
+        # Commit the changes to the database
         db.session.commit()
 
+        # Define and seed alerts
         alerts = [
             Alert(
                 alert_message='Alert message 1 - Robbery',
@@ -119,24 +124,20 @@ def seed_db():
                 incidents=[incidents[1]]
             )
         ]
+        # Iterate over the alerts and add them to the session
         for alert in alerts:
-            print(f"Alert Message: {alert.alert_message}")
-            print(f"User: {alert.user}")
-            print(f"Incidents: {alert.incidents}")
             if alert.alert_message and alert.user and alert.incidents:
                 db.session.add(alert)
                 alert.incidents = alert.incidents 
                 db.session.add(alert)
-                
-                # db.session.add([alert])
-                # db.session.add_all(alert.incidents)
             else:
                 print(f"Invalid data for alert: {alert}")
-        #db.session.query(Alert).delete()
-        #db.session.add_all(alerts)
+        # Commit the changes to the database
         db.session.commit()
 
         print('Models Seeded Successfully')
+    # If an exception occurs during the seeding process, the code will enter the except block
     except Exception as e:
+        # Rolls back any changes made to the session, ensuring data consistency
         db.session.rollback()
         print(f"Seeding Error: {str(e)}")
