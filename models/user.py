@@ -9,7 +9,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
     city = db.Column(db.String(50), nullable=False)
-    address = db.Column(db.String, nullable=False)
+    address = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
 
     # Defines a one-to-many relationship between User and Incident models, where a user can have multiple incidents.
@@ -26,7 +26,6 @@ class UserSchema(ma.Schema):
     location = fields.Nested('LocationSchema', exclude=['user'])
     # Declares a nested field for alerts, representing a list of alerts associated with the user. It uses the AlertSchema for serialization.
     alerts = fields.List(fields.Nested('AlertSchema', only=['id', 'alert_message'], exclude=['user', 'incidents']))
-
 
     class Meta:
         fields = ('id', 'password', 'name', 'email', 'address', 'city', 'incidents', 'alerts', 'location')

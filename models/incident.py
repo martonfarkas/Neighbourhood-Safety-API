@@ -23,9 +23,6 @@ class Incident(db.Model):
     alert = db.relationship('Alert', back_populates='incidents')
 
 class IncidentSchema(ma.Schema):
-    # Declares a nested field for user, representing the user associated with the incident. It uses the UserSchema for serialization. 
-    user = fields.Nested('UserSchema', only=['id', 'name', 'email'], exclude=['password', 'incidents', 'location'])
-    
     # Pluck field is configured to extract the id attribute from the User object
     user = fields.Pluck('UserSchema', 'id', default=None)
     # Declares a nested field for location, representing the location associated with the incident. It uses the LocationSchema for serialization.
@@ -34,5 +31,5 @@ class IncidentSchema(ma.Schema):
     alert = fields.Nested('AlertSchema', exclude=['incidents'])
 
     class Meta:
-        fields = ('id', 'description', 'date_time', 'location', 'alert', 'user')
+        fields = ('id', 'description', 'date_time', 'location', 'alert', 'user', 'location_id', 'alert_id', 'user_id')
         ordered=True

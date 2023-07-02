@@ -6,7 +6,6 @@ from datetime import timedelta
 from flask_jwt_extended import create_access_token
 from init import db, bcrypt
 
-
 # This blueprint will be used to define routes related to authentication.
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -32,14 +31,14 @@ def one_user(id):
     else:
         return {'error': 'User not found'}, 404
 
-# # Endpoint for user registration
+# Endpoint for user registration
 @auth_bp.route('/register/', methods=['POST'])
 def auth_register():
     try:
-        # Create a new User object with the provided data
         user = User(
             name=request.json.get('name'),
             email=request.json['email'],
+            address=request.json.get('address'),
             city=request.json.get('city'),
             password=bcrypt.generate_password_hash(request.json['password']).decode('utf-8'),
         )
@@ -64,7 +63,7 @@ def auth_login():
             # Generate a new access token for the authenticated user
             token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
             # Return the access token and serialized user data (excluding 'password')
-            return {'token': token, 'user': UserSchema(exclude=['password']).dump(user)}
+            return {'message': 'Login successful!', 'token': token, 'user': UserSchema(exclude=['password']).dump(user)}, 200
         else:
             # Return an error response if the email address or password is invalid
             return {'error': 'Invalid email address or password!'}, 401
