@@ -8,6 +8,7 @@ class User(db.Model):
 
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
+    city = db.Column(db.String(50), nullable=False)
     address = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
 
@@ -20,13 +21,13 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
     # Declares a nested field for incidents, representing a list of incidents associated with the user. It uses the IncidentSchema for serialization.
-    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['user']))
+    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['user', 'location']))
     # Declares a nested field for location, representing the user's location. It uses the LocationSchema for serialization.
     location = fields.Nested('LocationSchema', exclude=['user'])
     # Declares a nested field for alerts, representing a list of alerts associated with the user. It uses the AlertSchema for serialization.
-    alerts = fields.List(fields.Nested('AlertSchema', exclude=['user', 'incidents']))
+    alerts = fields.List(fields.Nested('AlertSchema', only=['id', 'alert_message'], exclude=['user', 'incidents']))
 
 
     class Meta:
-        fields = ('id', 'name', 'email', 'address', 'password', 'incidents', 'alerts', 'location')
+        fields = ('id', 'password', 'name', 'email', 'address', 'city', 'incidents', 'alerts', 'location')
         ordered=True

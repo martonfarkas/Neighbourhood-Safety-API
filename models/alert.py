@@ -5,7 +5,7 @@ from models.incident import IncidentSchema
 
 class Alert(db.Model):
     __tablename__ = 'alerts'
-
+    
     id = db.Column(db.Integer, primary_key=True)
 
     alert_message = db.Column(db.String())
@@ -19,11 +19,10 @@ class Alert(db.Model):
 
 class AlertSchema(ma.Schema):
     # Declares a nested field for user, representing the user associated with the alert. It uses the UserSchema for serialization.
-    user = fields.Nested(UserSchema, exclude=['alerts', 'incidents', 'location'])
+    user = fields.Nested(UserSchema, only=['id', 'name', 'email'], exclude=['alerts', 'incidents', 'location', 'password'])
     #  Declares a nested field for incidents, representing the incidents associated with the alert. It uses the IncidentSchema for serialization.
-    incidents = fields.List(fields.Nested(IncidentSchema, exclude=['alert', 'user']))
+    incidents = fields.List(fields.Nested(IncidentSchema, exclude=['alert', 'user', 'location']))
 
     class Meta:
-        fields = ('id', 'alert_message', 'user', 'incidents')
+        fields = ('id', 'alert_message', 'incidents', 'user')
         ordered=True
-        

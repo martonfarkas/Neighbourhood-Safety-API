@@ -18,9 +18,12 @@ class Location(db.Model):
 
 class LocationSchema(ma.Schema):
     # Declares a nested field for incidents, representing a list of incidents associated with the location. It uses the UserSchema for serialization.
-    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['location']))
+    incidents = fields.List(fields.Nested('IncidentSchema', exclude=['location', 'user']))
+    
     # Declares a nested field for user, representing the user associated with the location. It uses the UserSchema for serialization.
-    user = fields.Nested('UserSchema', exclude=['location', 'incidents'])
+    #user = fields.Nested('UserSchema', only=['id', 'name', 'email'], exclude=['location', 'incidents', 'password'])
+    
+    user = fields.Pluck('UserSchema', 'id', default=None)
     class Meta:
         fields = ('id', 'city', 'address', 'incidents', 'user')
         ordered=True

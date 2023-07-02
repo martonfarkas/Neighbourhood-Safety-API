@@ -16,31 +16,33 @@ def create_db():
     db.create_all()
     print('Tables Created Successfully')
 
+
 @cli_bp.cli.command('seed')
 def seed_db():
     try:
+        # Delete existing data from tables
+        Location.query.delete()
+        User.query.delete()
+        Incident.query.delete()
+        Alert.query.delete()
+
         # Define and seed locations
         locations = [
             Location(
                 city='Sydney',
-                address='25 Avoca St, Randwick',
+                address='25 Avoca St',
             ),
             Location(
                 city='Brisbane',
-                address='242 Edward St, Brisbane City',
+                address='242 Edward St',
             ),
             Location(
                 city='Melbourne',
-                address='19 Nelson St, Maroondah',
+                address='19 Nelson St',
             )
         ]
         # Iterate over the locations and add them to the session
-        for location in locations:
-            if location.city and location.address:
-                db.session.add_all([location])
-            else:
-                print(f"Invalid data for location: {location}")
-        # Commit the changes to the database
+        db.session.add_all(locations)
         db.session.commit()
 
         # Define and seed users
@@ -48,32 +50,30 @@ def seed_db():
             User(
                 name='Eric Morales',
                 email='morales@spam.com',
-                address='101 Hull Rd, Sydney',
+                address='101 Hull Rd',
+                city='Sydney',
                 password=bcrypt.generate_password_hash('neighbour').decode('utf-8'),
                 location=locations[0] 
             ),
             User(
                 name='John Smith',
                 email='smith@spam.com',
-                address='16, Sheppards Road, Brisbane',
+                address='16, Sheppards Road',
+                city='Brisbane',
                 password=bcrypt.generate_password_hash('hood').decode('utf-8'),
                 location=locations[1]
             ),
             User(
                 name='Sam Jones',
                 email='jones@spam.com',
-                address='8 Fortune Avenue, Melbourne',
+                address='8 Fortune Avenue',
+                city='Melbourne',
                 password=bcrypt.generate_password_hash('safety').decode('utf-8'),
                 location=locations[2]
             )
         ]
         # Iterate over the users and add them to the session
-        for user in users:
-            if user.name and user.email and user.address and user.password:
-                db.session.add_all([user])
-            else:
-                print(f"Invalid data for user: {user}")
-        # Commit the changes to the database
+        db.session.add_all(users)
         db.session.commit()
 
         # Define and seed incidents
@@ -98,12 +98,7 @@ def seed_db():
             )
         ]
         # Iterate over the incidents and add them to the session
-        for incident in incidents:
-            if incident.description and incident.date_time and incident.user and incident.location:
-                db.session.add_all([incident])
-            else:
-                print(f"Invalid data for incident: {incident}")
-        # Commit the changes to the database
+        db.session.add_all(incidents)
         db.session.commit()
 
         # Define and seed alerts
@@ -125,19 +120,10 @@ def seed_db():
             )
         ]
         # Iterate over the alerts and add them to the session
-        for alert in alerts:
-            if alert.alert_message and alert.user and alert.incidents:
-                db.session.add(alert)
-                alert.incidents = alert.incidents 
-                db.session.add(alert)
-            else:
-                print(f"Invalid data for alert: {alert}")
-        # Commit the changes to the database
+        db.session.add_all(alerts)
         db.session.commit()
 
         print('Models Seeded Successfully')
-    # If an exception occurs during the seeding process, the code will enter the except block
     except Exception as e:
-        # Rolls back any changes made to the session, ensuring data consistency
         db.session.rollback()
         print(f"Seeding Error: {str(e)}")
